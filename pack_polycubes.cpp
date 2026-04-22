@@ -27,7 +27,7 @@
 using std::size_t;
 
 size_t total_solutions = 0;
-const size_t LIMIT = 1000000;
+const size_t LIMIT = 10000;
 
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
