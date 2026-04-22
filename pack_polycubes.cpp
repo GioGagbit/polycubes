@@ -21,6 +21,9 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <cmath>
+#include <numeric>
+#include <random>
 using std::size_t;
 
 size_t total_solutions = 0;
@@ -31,26 +34,43 @@ std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
 namespace dlx {
     size_t r = 0;
 }
-std::ofstream out("puzzle_counts.txt");
+std::ofstream out("puzzle_output.txt");
+
+double estimate_difficulty(Solver& solver, int samples = 200)
+{
+    std::mt19937 rng(12345);
+
+    double sum_log = 0.0;
+
+    for (int i = 0; i < samples; i++)
+    {
+        auto deg = solver.sample(rng);
+
+        long double prod = 1.0;
+        for (int d : deg)
+            prod *= d;
+
+        sum_log += std::log((double)prod + 1e-12);
+    }
+
+    return std::exp(sum_log / samples);
+}
 
 class Solver : public dlx::DLX<int, int>
 {
 public:
-   virtual bool found()
+    virtual bool found()
 {
     std::vector<int> ids;
 
     for (auto&& row : solution)
-    {
         ids.push_back(pieces[row]);
-    }
 
     std::sort(ids.begin(), ids.end());
 
     ++counts[ids];
     total_solutions++;
 
-    // 🔴 STOP DOPO 1 MILIONE
     if (total_solutions >= LIMIT)
         return false;
 
@@ -112,18 +132,21 @@ int main(int argc, char *argv[])
         std::cout << std::endl;
     }
     */
-    for (auto&& count : counts)
-    {
-    out << count.second << " ";
-
-    for (size_t i = 0; i < count.first.size(); ++i)
-        out << count.first[i] << " ";
-
-    out << std::endl;
-    }
-    for (auto&& count : counts)
+    for (auto&& entry : counts)
 {
-    double difficulty = (double)r / (double)count.second;
-    out << "DIFF " << difficulty << " ";
+    const std::vector<int>& pieces_set = entry.first;
+    size_t sol_count = entry.second;
+
+    // scrivi numero soluzioni
+    out << sol_count << " ";
+
+    // scrivi pezzi
+    for (int p : pieces_set)
+        out << p << " ";
+
+    // calcola difficulty via sampling
+    double diff = estimate_difficulty(solver, 200);
+
+    out << "DIFF " << diff << "\n";
 }
 }
