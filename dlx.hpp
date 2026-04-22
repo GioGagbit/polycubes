@@ -49,6 +49,9 @@ bool dlx::DLX<Row, Column>::search()
             cover(j->column);
         }
         running = search();
+        running = search();
+if (solution_count >= MAX_SOLUTIONS)
+    return false;
         for (Node *j = r->L; j != r; j = j->L)
         {
             uncover(j->column);

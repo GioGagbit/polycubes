@@ -22,6 +22,8 @@
 #include <algorithm>
 #include <string>
 using std::size_t;
+static const int MAX_SOLUTIONS = 10000;
+static int solution_count = 0;
 
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
@@ -31,16 +33,32 @@ class Solver : public dlx::DLX<int, int>
 {
 public:
     virtual bool found()
+{
+    if (solution_count >= MAX_SOLUTIONS)
+        return false;
+
+    std::vector<int> ids;
+
+    for (auto&& row : solution)
     {
-        std::vector<int> ids;
-        for (auto&& row : solution)
-        {
-            ids.push_back(pieces[row]);
-        }
-        std::sort(ids.begin(), ids.end());
-        ++counts[ids];
-        return true;
+        ids.push_back(pieces[row]);
     }
+
+    std::sort(ids.begin(), ids.end());
+    ++counts[ids];
+    ++solution_count;
+
+    out << "SET " << solution_count << "\n";
+
+    out << "PIECES: ";
+    for (int id : ids)
+        out << id << " ";
+    out << "\n";
+
+   out << "SOLUTION: " << counts[ids] << "\n\n";
+
+    return true;
+}
 };
 
 int main(int argc, char *argv[])
@@ -97,13 +115,15 @@ int main(int argc, char *argv[])
         std::cout << std::endl;
     }
     */
-    for (auto&& count : counts)
-    {
-    out << count.second << " ";
+    for (auto&& entry : counts)
+{
+    const std::vector<int>& pieces_set = entry.first;
 
-    for (size_t i = 0; i < count.first.size(); ++i)
-        out << count.first[i] << " ";
+    out << entry.second << " ";
 
-    out << std::endl;
-    }
+    for (int p : pieces_set)
+        out << p << " ";
+
+    out << "\n";
+}
 }
