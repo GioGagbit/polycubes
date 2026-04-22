@@ -28,12 +28,11 @@ using std::size_t;
 
 size_t total_solutions = 0;
 const size_t LIMIT = 10000;
+size_t nodes = 0;
 
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
-namespace dlx {
-    size_t r = 0;
-}
+
 std::ofstream out("puzzle_output.txt");
 
 
@@ -59,26 +58,6 @@ public:
     return true;
 }
 };
-
-double estimate_difficulty(Solver& solver, int samples = 200)
-{
-    std::mt19937 rng(std::random_device{}());
-
-    double sum = 0.0;
-
-    for (int i = 0; i < samples; i++)
-    {
-        auto deg = solver.sample(rng);
-
-        double local = 0.0;
-        for (int d : deg)
-            local += std::log((double)d);
-
-        sum += local;
-    }
-
-    return std::exp(sum / samples);
-}
 
 int main(int argc, char *argv[])
 {
@@ -146,9 +125,11 @@ int main(int argc, char *argv[])
     for (int p : pieces_set)
         out << p << " ";
 
-    // calcola difficulty via sampling
-    double diff = estimate_difficulty(solver, 200);
+        double diff = (sol_count > 0)
+        ? (double)nodes / (double)sol_count
+        : 0.0;
 
     out << "DIFF " << diff << "\n";
+
 }
 }
