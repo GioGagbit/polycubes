@@ -23,7 +23,6 @@
 #include <string>
 using std::size_t;
 
-size_t r = 0;
 size_t total_solutions = 0;
 const size_t LIMIT = 1000000;
 
