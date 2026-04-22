@@ -23,10 +23,22 @@
 #include <string>
 using std::size_t;
 int solution_count = 0;
-const int MAX_SOLUTIONS = 10000;
+const int MAX_SOLUTIONS = 100000000;
+
+#include <unordered_map>
+
+struct VectorHash {
+    size_t operator()(const std::vector<int>& v) const {
+        size_t h = 0;
+        for (int i : v)
+            h = h * 31 + i;
+        return h;
+    }
+};
+
+std::unordered_map<std::vector<int>, size_t, VectorHash> counts;
 
 std::vector<int> pieces; // row in solution :-> piece ID
-std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
 std::ofstream out("puzzle_counts.txt");
 
 class Solver : public dlx::DLX<int, int>
@@ -40,22 +52,15 @@ public:
     std::vector<int> ids;
 
     for (auto&& row : solution)
-    {
         ids.push_back(pieces[row]);
-    }
 
     std::sort(ids.begin(), ids.end());
+
     ++counts[ids];
     ++solution_count;
 
-    out << "SET " << solution_count << "\n";
-
-    out << "PIECES: ";
-    for (int id : ids)
-        out << id << " ";
-    out << "\n";
-
-   out << "SOLUTION: " << counts[ids] << "\n\n";
+    if (solution_count % 1000000 == 0)
+    std::cout << solution_count << std::endl;
 
     return true;
 }
@@ -115,15 +120,19 @@ int main(int argc, char *argv[])
         std::cout << std::endl;
     }
     */
-    for (auto&& entry : counts)
+   for (auto&& entry : counts)
 {
-    const std::vector<int>& pieces_set = entry.first;
+    const std::vector<int>& set = entry.first;
 
-    out << entry.second << " ";
+    out << "S=" << set.size() << "; ";
 
-    for (int p : pieces_set)
-        out << p << " ";
+    for (size_t i = 0; i < set.size(); ++i)
+    {
+        out << set[i];
+        if (i != set.size() - 1)
+            out << ",";
+    }
 
-    out << "\n";
+    out << "; count=" << entry.second << "\n";
 }
 }
