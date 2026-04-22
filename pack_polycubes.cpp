@@ -23,6 +23,10 @@
 #include <string>
 using std::size_t;
 
+size_t r = 0;
+size_t total_solutions = 0;
+const size_t LIMIT = 1000000;
+
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
 std::ofstream out("puzzle_counts.txt");
@@ -30,17 +34,26 @@ std::ofstream out("puzzle_counts.txt");
 class Solver : public dlx::DLX<int, int>
 {
 public:
-    virtual bool found()
+   virtual bool found()
+{
+    std::vector<int> ids;
+
+    for (auto&& row : solution)
     {
-        std::vector<int> ids;
-        for (auto&& row : solution)
-        {
-            ids.push_back(pieces[row]);
-        }
-        std::sort(ids.begin(), ids.end());
-        ++counts[ids];
-        return true;
+        ids.push_back(pieces[row]);
     }
+
+    std::sort(ids.begin(), ids.end());
+
+    ++counts[ids];
+    total_solutions++;
+
+    // 🔴 STOP DOPO 1 MILIONE
+    if (total_solutions >= LIMIT)
+        return false;
+
+    return true;
+}
 };
 
 int main(int argc, char *argv[])
@@ -106,4 +119,9 @@ int main(int argc, char *argv[])
 
     out << std::endl;
     }
+    for (auto&& count : counts)
+{
+    double difficulty = (double)r / (double)count.second;
+    out << "DIFF " << difficulty << " ";
+}
 }

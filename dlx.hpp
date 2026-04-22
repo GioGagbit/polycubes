@@ -25,6 +25,8 @@ bool dlx::DLX<Row, Column>::search()
 {
     bool running = true;
     Node *c = root->R;
+    extern size_t r;
+r += 1;
     if (c == root)
     {
         return found();
