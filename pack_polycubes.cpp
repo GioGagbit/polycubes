@@ -62,22 +62,22 @@ public:
 
 double estimate_difficulty(Solver& solver, int samples = 200)
 {
-    std::mt19937 rng(12345);
+    std::mt19937 rng(std::random_device{}());
 
-    double sum_log = 0.0;
+    double sum = 0.0;
 
     for (int i = 0; i < samples; i++)
     {
         auto deg = solver.sample(rng);
 
-        long double prod = 1.0;
+        double local = 0.0;
         for (int d : deg)
-            prod *= d;
+            local += std::log((double)d);
 
-        sum_log += std::log((double)prod + 1e-12);
+        sum += local;
     }
 
-    return std::exp(sum_log / samples);
+    return std::exp(sum / samples);
 }
 
 int main(int argc, char *argv[])
