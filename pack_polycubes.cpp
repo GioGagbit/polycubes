@@ -29,6 +29,9 @@ const size_t LIMIT = 1000000;
 
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
+namespace dlx {
+    size_t r = 0;
+}
 std::ofstream out("puzzle_counts.txt");
 
 class Solver : public dlx::DLX<int, int>
