@@ -1,3 +1,5 @@
+extern int solution_count;
+extern const int MAX_SOLUTIONS;
 template<typename Row, typename Column>
 struct dlx::DLX<Row, Column>::Node
 {

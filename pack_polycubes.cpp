@@ -22,8 +22,8 @@
 #include <algorithm>
 #include <string>
 using std::size_t;
-static const int MAX_SOLUTIONS = 10000;
-static int solution_count = 0;
+int solution_count = 0;
+const int MAX_SOLUTIONS = 10000;
 
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
