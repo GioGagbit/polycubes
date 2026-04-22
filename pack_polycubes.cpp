@@ -36,25 +36,7 @@ namespace dlx {
 }
 std::ofstream out("puzzle_output.txt");
 
-double estimate_difficulty(Solver& solver, int samples = 200)
-{
-    std::mt19937 rng(12345);
 
-    double sum_log = 0.0;
-
-    for (int i = 0; i < samples; i++)
-    {
-        auto deg = solver.sample(rng);
-
-        long double prod = 1.0;
-        for (int d : deg)
-            prod *= d;
-
-        sum_log += std::log((double)prod + 1e-12);
-    }
-
-    return std::exp(sum_log / samples);
-}
 
 class Solver : public dlx::DLX<int, int>
 {
@@ -77,6 +59,26 @@ public:
     return true;
 }
 };
+
+double estimate_difficulty(Solver& solver, int samples = 200)
+{
+    std::mt19937 rng(12345);
+
+    double sum_log = 0.0;
+
+    for (int i = 0; i < samples; i++)
+    {
+        auto deg = solver.sample(rng);
+
+        long double prod = 1.0;
+        for (int d : deg)
+            prod *= d;
+
+        sum_log += std::log((double)prod + 1e-12);
+    }
+
+    return std::exp(sum_log / samples);
+}
 
 int main(int argc, char *argv[])
 {
