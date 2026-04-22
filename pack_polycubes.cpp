@@ -30,6 +30,10 @@ size_t total_solutions = 0;
 const size_t LIMIT = 10000;
 size_t nodes = 0;
 
+namespace dlx {
+    size_t nodes = 0;
+}
+
 std::vector<int> pieces; // row in solution :-> piece ID
 std::map<std::vector<int>, size_t> counts; // piece IDs :-> # solutions
 
