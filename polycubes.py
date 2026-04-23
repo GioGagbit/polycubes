@@ -63,11 +63,21 @@ if __name__ == '__main__':
 
     # Find all Soma Cube-like puzzles using distinct polycubes with 1 to 5
     # cubies.
-    board = {(x, y, z) for x in range(3) for y in range(3) for z in range(3)}
+    board = {(x, y, z) for x in range(3) for y in range(3) for z in range(6)}
     pieces = dict(enumerate(chain.from_iterable(polycubes(n)
-                                                for n in range(1, 6))))
+                                                for n in range(3, 6))))
     (pairs, optional, rows) = boards.board_cover(board, pieces, rotations,
                                                  'pieces')
+                                            
+    #print("Board size:", len(board))
+    #print("Num pieces:", len(pieces))
+    #print("Optional columns:", len(optional))
+
+    #num_piece_cols = len(pieces)
+
+    #print("Board cols marked optional:",
+     # len([c for c in optional if c >= num_piece_cols]))    
+
     with open('polycubes-rows.txt', 'w') as f:
         print(len(rows), file=f)
         for name, cubies in rows:
@@ -76,7 +86,7 @@ if __name__ == '__main__':
         boards.print_cover((pairs, optional, rows), f)
 
     # Generate 3D-printable polycubes with 1 to 5 cubies.
-    for n in range(1, 6):
+    for n in range(3, 6):
         for polycube in polycubes(n):
             print('burr_piece({});'.format(
                 str(burr_piece(stable(polycube))).replace("'", '"')))

@@ -23,7 +23,7 @@
 #include <string>
 using std::size_t;
 int solution_count = 0;
-const int MAX_SOLUTIONS = 100000000;
+const int MAX_SOLUTIONS = 10000000;
 
 #include <unordered_map>
 
@@ -53,6 +53,10 @@ public:
 
     for (auto&& row : solution)
         ids.push_back(pieces[row]);
+    /*if (solution.size() != 27)
+{
+    std::cout << "BAD SOL SIZE: " << solution.size() << std::endl;
+}*/
 
     std::sort(ids.begin(), ids.end());
 
