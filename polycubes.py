@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     # Find all Soma Cube-like puzzles using distinct polycubes with 1 to 5
     # cubies.
-    board = {(x, y, z) for x in range(3) for y in range(3) for z in range(6)}
+    board = {(x, y, z) for x in range(4) for y in range(4) for z in range(4)}
     pieces = dict(enumerate(chain.from_iterable(polycubes(n)
                                                 for n in range(3, 6))))
     (pairs, optional, rows) = boards.board_cover(board, pieces, rotations,
