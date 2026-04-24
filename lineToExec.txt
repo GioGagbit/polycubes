@@ -3,3 +3,5 @@ g++ pack_polycubes.cpp -O3 -o solver
 ./solver polycubes-puzzle.txt polycubes-rows.txt
 
 git add.
+git commit -m "messaggio descrittivo"
+git push origin main
